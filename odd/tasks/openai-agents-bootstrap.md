@@ -25,7 +25,7 @@ Route: delegated direct. Trigger evidence: unfamiliar legacy mapping and multipl
 
 ## Tasks
 - [x] T1 — Prepare an isolated environment with Agents API session requests and bounded callback wiring, reuse the citation utility, document Azure/legacy mappings, maintain agent instructions and a Spanish README, and verify offline behavior. The corrected API implementation and checks passed; the previous SDK runtime/tests were superseded.
-- [ ] T2 — Push the verified minimal base to https://github.com/alejandrogaseinfo/libras-refactor using the explicitly authorized current GitHub CLI session. Route: inline Git delivery; no source implementation. Destination, operation and credential/session are authorized. No PR, merge or deployment is requested.
+- [x] T2 — Push the verified minimal base to https://github.com/alejandrogaseinfo/libras-refactor using the explicitly authorized current GitHub CLI session. Route: inline Git delivery; no source implementation. Push succeeded and remote branch SHA matched the local documentation commit. No PR, merge or deployment was performed.
 - [x] T3 — Document the 2026-10-12 Azure resource/identity/permission audit and provenance limits in README.md (neutral Spanish) and agent.md (English). Route: delegated direct because two documentation files need factual reconciliation. Writer and parent structural/factual readback and git diff --check passed; runtime tests are N/A because behavior is unchanged. Minimal Agents API scope and existing runtime bytes are preserved.
 
 Acceptance: a clean environment resolves pinned dependencies without openai-agents; the doctor command validates three hosted function definitions without credentials or remote activity; existing-agent ID/key and unavailable callback validation fail clearly; Blob citation classification is checked; mocked Agents API requests use the installed SDK's exact beta/session API; all corrected-project tests pass; original source remains untouched; README is neutral professional Spanish and AGENTS.md directs future agents to agent.md.
@@ -85,11 +85,13 @@ T3 documentation-only exception: runtime/TDD/tests/builds/install checks are N/A
 - T2 destination, push operation and current GitHub CLI session are explicitly authorized. Parent owns authenticated GitHub readback, commit and push; the writer does not inspect or use that session.
 
 ## Next step
-Finish the authorized GitHub CLI push and record its remote commit readback. Provider, Teams, permission changes and session-lifecycle implementation remain separate later scope.
+The minimal base and Azure documentation are published. Provider, Teams, permission changes and session-lifecycle implementation remain separate later scope; no further implementation is requested in this unit.
 
 ## Azure map documentation delivery
 - User authorized the Azure map in README.md/agent.md and commit/push to alejandrogaseinfo/libras-refactor with the current GitHub CLI session. The active account is alejandrogaseinfo; repository readback found an empty destination with ADMIN permission. No credential value is stored.
 - T3 writer and parent structural/factual checks passed; staged git diff --check passed. Only README.md, agent.md and this recovery document changed. Runtime tests/builds are N/A for this documentation-only unit; previous 16-test Agents API proof remains unchanged.
 - Native assessment: medium because agent.md contains operational agent instructions, under_budget for this current documentation change. Current read-only mode status reports off, decided by global; native review is disabled/unmanaged and was not started. Earlier ungranted consent is historical, not an approval or delivery gate.
 - Existing Azure hosting, identities, roles and network metadata were documented without mutations or integration changes. Production SystemAssigned data grants remain distinct from Bot UAMI authentication and staging permissions.
-- Commit identity and remote push proof follow after the observed Git operations. Engram mirror remains pending because host session resolution is unconfirmed.
+- T3 work-unit commit: a34b477fe0d6793226c11c7a7d45b26b590b9dbd (docs: document Azure resource reuse and permission scopes), 131 additions and 20 deletions across three documentation files. Rollback boundary is this dated documentation update; existing runtime and Azure resources are unaffected.
+- T2 push succeeded using the current GitHub CLI account via a command-scoped gh credential helper, without changing global Git authentication. Remote refs/heads/feat/openai-agents-bootstrap readback equaled a34b477fe0d6793226c11c7a7d45b26b590b9dbd. The repository's default branch is now feat/openai-agents-bootstrap, as observed after its first push. No force push, PR, merge or deployment occurred.
+- Engram mirror remains pending because host session resolution is unconfirmed; the local and published task document preserve recovery evidence.
