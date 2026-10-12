@@ -1,37 +1,41 @@
 # Libras OpenAI Agents bootstrap
 
 ## Objective
-Prepare an isolated, runnable Python 3.11 development base for migrating Libras orchestration from Terra to OpenAI Agents SDK while retaining Teams and existing Azure services.
+Prepare only a minimal isolated Python 3.11 agentic-system base using hosted OpenAI Agents API, with future Teams and existing Azure evidence-provider boundaries documented.
 
 ## Problem and scope
 The reference checkout is C:\cw\Libras, inside the C:\cw monorepo at 2591bdc5e272b26453c6ac30b0c987530c0d5e69. Its dirty working tree and bundled dependencies must remain untouched. The parent workspace contains extracted dependencies, so the new project lives in libras-agents/ with its own Git repository and virtual environment.
 
-Authorized: local files, dependency installation, deterministic tests, offline SDK construction, and feature-branch work-unit commits. Azure configuration, deployment, Teams messages, ClickUp requests, model requests, and credential reuse require a later explicitly scoped authorization.
+Authorized: only the minimal agentic-system base, local files, dependency installation, deterministic tests, offline API manifests/mocked requests, and feature-branch work-unit commits. The user requested push to https://github.com/alejandrogaseinfo/libras-refactor; parent handles push after explicit credential/session authorization. No remote repository probing, PR, merge, full migration, Azure configuration, deployment, Teams messages, ClickUp requests, real model/session requests, or credential reuse is authorized for this worker.
 
 ## Design
-- Use locally hosted OpenAI Agents SDK behind injected documentary, database-catalog and ClickUp read-provider contracts.
-- Keep model selection explicit and provider integrations disabled until supplied; never load legacy application globals or .env files automatically.
+- Use hosted OpenAI Agents API behind an explicitly configured agent ID and injected documentary, database-catalog and ClickUp read callbacks. OpenAI owns orchestration; Libras executes only approved bounded callbacks.
+- Saved agents supply model configuration; an explicit model override is optional. Keep provider integrations disabled until supplied; never load legacy application globals or .env files automatically.
 - Reuse the pure private-Blob citation detector with source attribution.
 - Document Teams authentication and bounded evidence/authorization contracts for later migration.
-- Disable tracing in the runtime and redact SDK model/tool logging.
+- SDK tracing flags do not configure Agents API retention. Document hosted session data limits accurately and keep API activity absent from offline setup.
 - Keep README in neutral professional Spanish; provide English project context in agent.md and the canonical AGENTS.md pointer.
 
 ## Delivery and routing
-Delivery strategy: single-pr; no push, PR or merge in this task. Forecast revised to approximately 550 authored additions, excluding the generated dependency lock/environment. The isolated bootstrap, contract tests, source/resource mapping, and requested project context form one coherent local preparation unit; retaining useful checks and documentation explains the increase from 340. Future migration units can be sliced separately. Initial reviewed boundary: planning commit b18f37d860881fca3551cf7cf6734ff2fc175454.
+Delivery strategy: single-pr, describing one coherent minimal local preparation unit; no PR, merge or deployment is requested. Parent handles local commits and requested push after explicit credential/session authorization. Initial scaffold forecast was approximately 550 authored additions, excluding generated lock/environment artifacts; useful tests/docs were retained. Future migration units can be sliced separately. Initial reviewed boundary: planning commit b18f37d860881fca3551cf7cf6734ff2fc175454.
+
+Correction delivery remains one coherent minimal base; local commits and the requested push destination belong to the parent. No PR, merge or deployment is requested. The correction replaces the superseded runtime and tests rather than introducing Teams or source integrations; its authored-change forecast is approximately 650 additions plus deletions, excluding generated lock/environment artifacts.
 
 Route: delegated direct. Trigger evidence: unfamiliar legacy mapping and multiple non-trivial implementation files. One read-only explorer mapped source boundaries; one writer prepares the base. No parallel writes.
 
 ## Tasks
-- [x] T1 — Install an isolated environment, create lazy SDK/tool wiring, reuse the citation utility, document Azure/legacy mappings, add project agent instructions and a Spanish README, and verify offline behavior. Implementation, writer checks and parent readback complete; local commit and native review evidence follow below.
+- [x] T1 — Prepare an isolated environment with Agents API session requests and bounded callback wiring, reuse the citation utility, document Azure/legacy mappings, maintain agent instructions and a Spanish README, and verify offline behavior. The corrected API implementation and checks passed; the previous SDK runtime/tests were superseded.
+- [ ] T2 — Push the verified minimal base to https://github.com/alejandrogaseinfo/libras-refactor using an explicitly authorized GitHub credential/session. Route: inline Git delivery; no source implementation. Destination and operation were requested; credential/session authorization is pending. No PR, merge or deployment is requested.
 
-Acceptance: a clean environment resolves pinned dependencies; the doctor command constructs three tool schemas without credentials or remote activity; absent providers and missing model configuration fail clearly; Blob citation classification is checked; all new-project tests pass; original source remains untouched; README is neutral professional Spanish and AGENTS.md directs future agents to agent.md.
+Acceptance: a clean environment resolves pinned dependencies without openai-agents; the doctor command validates three hosted function definitions without credentials or remote activity; existing-agent ID/key and unavailable callback validation fail clearly; Blob citation classification is checked; mocked Agents API requests use the installed SDK's exact beta/session API; all corrected-project tests pass; original source remains untouched; README is neutral professional Spanish and AGENTS.md directs future agents to agent.md.
 
 ## Verification
 Applicable test-first runner: .venv\Scripts\python.exe -m unittest discover -s tests -v. Observe meaningful RED before runtime/evidence implementation, then GREEN. Documentation and packaging get structural checks, not invented RED evidence.
 
-Required checks: unittest discovery, pip check, python -m libras_agents doctor, compileall for src/tests, git diff --check. Do not execute Runner.run against a real service. Writer self-verification and one parent offline doctor spot check are required; independent verification follows native assessed risk.
+Required checks: unittest discovery, pip check, python -m libras_agents doctor, compileall for src/tests, git diff --check. Do not create agents/sessions or send events against a real service. Writer self-verification and one parent offline doctor spot check are required; independent verification follows native assessed risk.
 
 ## Progress and evidence
+- Initial SDK evidence below is historical and superseded by the user's Agents API correction; it does not establish corrected API acceptance or live readiness.
 - Exploration complete: Python 3.11.6 available; source Teams host and business-tool boundaries mapped.
 - SDK metadata verified: openai-agents 0.23.1, Python >=3.10; Microsoft Agents aiohttp 1.8.0 supports Python >=3.10.
 - Public GitHub reference returned 404; authenticated access was not used.
@@ -48,6 +52,22 @@ Required checks: unittest discovery, pip check, python -m libras_agents doctor, 
 - Parent structural readback and offline doctor spot check passed. Staged git diff --check passed. Initial untracked-candidate assessment was unassessable; explicit staging resolved that inventory condition, after which native assessment reported medium (606 changed lines including generated lock).
 - Planning baseline: b18f37d860881fca3551cf7cf6734ff2fc175454. Rollback boundary: this isolated project's bootstrap files and environment; the legacy repository and Azure resources are unaffected.
 - Work-unit commit: 950edeb8d59a0658c37cbb3e381e8aa661408e11 (feat: prepare isolated Libras Agents environment). Observed 606 additions plus 6 deletions; authored count 547 after excluding the 65-line generated lock. Source, tests, Spanish README and agent instructions are together in this unit. No push, PR, merge or deployment performed.
+- User clarification supersedes SDK choice: use Agents API, not local Agents SDK. Official current documentation and installed openai 3.29.0 confirm AsyncOpenAI.beta.agents.sessions.create, environment type none, streaming tool_handlers and session event result submission. Agent ID supplies saved model; SDK max_turns/tracing controls must be removed. Previous 13-test proof is historical SDK proof, not proof of corrected API integration.
+- Previous SDK candidate consent was never granted or declined; no review actor ran. Do not replay its target-bound invocation for the changed Agents API candidate. New assessment/preflight must bind the corrected bytes.
+
+## Corrected Agents API evidence
+- Route: delegated direct, replacing the multiple-file SDK runtime/tests/docs while preserving the isolated package, Azure/Microsoft dependencies and pure Blob utility. Parent revised intent before correction writes; the scope is only a minimal agentic-system base.
+- Test-first RED observed against the previous implementation: 15 tests ran, exited 1 with 17 errors for missing Agents API manifest/callback/gateway capabilities and the wrong doctor product. Tests imported the existing runtime and exercised the new contract; this was not a missing-module import-only RED.
+- Implemented the installed openai 3.29.0 beta agents sessions API. Manifest requires an existing agent ID/input, omits model unless explicitly overridden, uses environment type none and stream true, and replaces saved tools with all three function definitions. Local SDK Agent/Runner/RunConfig, guessed model labels, six-turn orchestration and tracing flags were removed.
+- The client streams and dispatches its pending live function calls automatically. Local callbacks allow only the three bounded read operations, validate query-only arguments, cap queries at 2000 characters, evidence at 256000 UTF-8 bytes, execution at 30 seconds and dispatches at six. Callback failure evidence is never fabricated; the SDK submits a generic failed tool result while the gateway preserves the original local exception.
+- Real openai client plus httpx2.MockTransport/SSE fixtures observed POST /v1/agents/sessions, OpenAI-Beta agents=v1, dummy supplied-key authorization, saved model omission, complete function override and automatic /events tool_result submission with matching turn_id/call_id. Completed, failed, cancelled and plain-idle outcomes are distinguished by get_final_result. Local wait timeout closes observation without sending or claiming remote cancellation.
+- Fixture correction: preloaded mock HTTP responses were already closed, preventing SDK callback dispatch. Genuine in-memory ByteStream fixtures exercised the real callback transport; the resulting gateway/tests passed 16 tests before final environment normalization.
+- Environment cleanup: recursive generated .venv removal was automatically rejected as blocked by policy. Safer package-specific removal succeeded for openai-agents and 14 now-unneeded packages. Corrected editable installation and explicit generated egg-info regeneration removed the stale SDK requirement from both metadata locations. requirements.lock now contains 48 exact pins and no SDK/editable source path.
+- README is neutral Spanish and describes a base mínima, saved-agent ID/scopes, managed sessions/local callbacks, US-only residency and lack of ZDR with official citations. Session cancellation/deletion/recovery, full Teams hosting and real providers remain later scoped integrations. agent.md preserves the same boundary in English.
+- Final normalized checks observed exit 0: unittest discovery (16 tests passed), pip check (no broken requirements), Agents API doctor (three definitions, offline-manifest-only, capabilities unconfigured, Teams not-wired), compileall -q src tests and git diff --check. Microsoft/MSAL/Azure imports and exact beta session/event methods passed with network blocked; import discovery confirmed no agents package remains. All authored files passed UTF-8/BOM, final-newline, whitespace and agent-pointer readback checks.
+- Correction authored count: 648 additions plus deletions relative to the prior SDK work unit, excluding the generated lock's 17 changed lines. The corrected lock has 48 exact package pins. Commit identity and new native assessment remain parent actions; previous candidate consent must not be replayed.
+- No reference source change, real API/session/agent creation, credential reuse, remote probing, Teams activity, deployment, commit or push was performed by this worker. All provider/account/live behavior remains unconfigured and untested; no final required check is failed or skipped.
+- Parent corrected-candidate structural readback and Agents API doctor spot check passed. The README startup command now uses the portable Python 3.11 launcher instead of a workstation-specific user path. Local GitHub CLI availability was checked without inspecting authentication or probing the remote repository.
 
 ## Next step
-Record the local work-unit commit and native review outcome, then migrate bounded providers and the authenticated Teams adapter in separate authorized work units.
+Parent performs structural readback and doctor spot check, records the corrected local work unit and new native review outcome, then resolves credential/session authorization before the requested push. Provider, Teams and session-lifecycle implementations require separate later scope.

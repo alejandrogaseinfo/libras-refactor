@@ -1,13 +1,13 @@
-# Preparación de Libras con OpenAI Agents
+# Base mínima de Libras con OpenAI Agents API
 
-Este proyecto aislado de Python 3.11 prepara la capa de orquestación local de Libras. El diagnóstico sin conexión construye los esquemas de tres herramientas; esto no demuestra que Teams, Azure, ClickUp o las solicitudes a modelos estén listos para operar. Todas las integraciones permanecen sin configurar hasta que se inyecten y revisen explícitamente.
+Esta base mínima y aislada de Python 3.11 prepara el acceso a OpenAI Agents API para un sistema agéntico de Libras. OpenAI administra la orquestación y las sesiones; la aplicación local solo atiende callbacks de lectura autorizados. El diagnóstico construye tres definiciones de funciones sin conectarse a servicios. Esto no representa una refactorización completa ni demuestra que Teams, Azure, ClickUp o la cuenta de OpenAI estén listos para operar.
 
 ## Inicio rápido (PowerShell)
 
 Ejecute los comandos desde el directorio del proyecto. Utilice su intérprete directamente; activar el entorno es opcional.
 
 ```powershell
-& 'C:\Users\jgarcia\AppData\Local\Programs\Python\Python311\python.exe' -m venv .venv
+py -3.11 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.lock
 .\.venv\Scripts\python.exe -m pip install --no-deps --no-build-isolation -e .
 .\.venv\Scripts\python.exe -m libras_agents doctor
@@ -19,13 +19,23 @@ Ejecute los comandos desde el directorio del proyecto. Utilice su intérprete di
 
 ## Límites de ejecución
 
-El flujo previsto es **Teams -> adaptador autenticado de Microsoft Agents -> orquestador de OpenAI -> proveedores de lectura acotada para documentos, catálogo de bases de datos y ClickUp**. Los paquetes de alojamiento/MSAL de Microsoft y de Azure Search, Identity, Key Vault y Blob Storage están instalados como preparación; aquí no se inicia ningún cliente, búsqueda de credenciales, servidor ni acceso a cuentas.
+El flujo previsto es **Teams -> adaptador autenticado de Microsoft Agents -> sesión administrada por OpenAI Agents API -> callbacks locales de lectura acotada para documentos, catálogo de bases de datos y ClickUp**. OpenAI selecciona las herramientas y mantiene el estado de la conversación. La base no contiene un ciclo local de razonamiento de Agents SDK o Responses API. Los paquetes de alojamiento/MSAL de Microsoft y de Azure Search, Identity, Key Vault y Blob Storage están instalados como preparación; aquí no se inicia ningún servidor, búsqueda de credenciales ni acceso a cuentas.
 
-`build_agent(model=...)` exige un modelo explícito y no vacío. `run_libras(..., model=..., api_key=...)` valida ambos parámetros antes de llamar al SDK, rechaza la etiqueta del modelo de prueba sin conexión, limita el ciclo a seis turnos y desactiva las trazas y la inclusión de datos sensibles. Quien invoque la función debe proporcionar explícitamente su clave de API autorizada; esta base no selecciona credenciales ni destinos desde el entorno. La CLI no incluye ningún comando para ejecutar un modelo. `.env.example` contiene credenciales vacías y nombres de referencia sin secretos; nunca se carga automáticamente.
+`build_request_manifest(..., agent_id=...)` prepara una solicitud sin enviarla. `run_session(..., agent_id=..., api_key=...)` exige el ID de un agente existente y una clave explícita antes de acceder a `AsyncOpenAI.beta.agents.sessions.create`. El agente guardado aporta el modelo; `model=...` es una sustitución opcional que se omite por completo cuando no se proporciona. La solicitud usa `environment={"type": "none"}`, `stream=True` y las tres definiciones de funciones como lista completa: sustituye todas las herramientas del agente guardado para evitar capacidades adicionales.
 
-Cada herramienta acepta únicamente una consulta de búsqueda acotada y delega en su propio proveedor opcional de lectura asíncrona. Si falta el proveedor, se produce `ProviderUnavailable`, incluso a través del envoltorio del SDK; no se genera evidencia sustitutiva ni una respuesta sintética. Los proveedores deben preservar identificadores de fuente, procedencia de citas y evidencia, autorización en el servidor, límites de resultados y operaciones de solo lectura. No se exponen herramientas genéricas de SQL, HTTP, MCP ni acceso a credenciales.
+El cliente Python `openai==3.29.0` añade `OpenAI-Beta: agents=v1` y la autorización con la clave suministrada. Según el [inicio rápido oficial](https://developers.openai.com/api/docs/guides/agents-api/quickstart), la clave requiere `api.agents.read`, `api.agents.write` y `api.responses.write`. No se ha comprobado el acceso de la cuenta. La CLI solo ofrece el diagnóstico; no crea agentes ni sesiones. `.env.example` incluye `OPENAI_AGENT_ID`, credenciales vacías y nombres sin secretos, y nunca se carga automáticamente. La aplicación no busca claves ni sesiones existentes en el entorno.
 
-El diagnóstico utiliza la etiqueta interna `offline-only-test-model` únicamente para construir esquemas sin enviar solicitudes. Informa la presencia de variables de entorno, nunca sus valores; las capacidades siguen como `unconfigured` aunque existan variables. Su comprobación de citas Blob utiliza la función reutilizada. La importación y construcción del SDK no realizan solicitudes de red; las protecciones de privacidad reemplazan las opciones de trazas y registros del entorno y desactivan el registro del SDK antes de construir o ejecutar el agente.
+Los callbacks `search_documents`, `search_database_catalog` y `search_clickup` aceptan únicamente `query`, con un máximo de 2000 caracteres; delegan en proveedores opcionales de lectura asíncrona. Cada callback dispone de hasta 30 segundos y puede devolver hasta 256000 bytes UTF-8. Se permiten hasta seis llamadas locales por solicitud, sin imponer un límite de turnos al orquestador remoto. Un proveedor ausente produce `ProviderUnavailable`; los errores de autorización y ejecución se conservan localmente. El cliente envía un resultado de herramienta fallido genérico al servicio, sin convertirlo en evidencia ficticia ni exponer el texto de la excepción.
+
+El cliente gestiona el transporte de resultados con los IDs de turno y llamada; la aplicación solo despacha los tres nombres permitidos. Los proveedores deben preservar identificadores de fuente, procedencia de citas y evidencia, autorización en el servidor, límites de resultados y operaciones de solo lectura. No se exponen herramientas genéricas de SQL, HTTP, MCP ni acceso a credenciales. El historial guardado no autoriza volver a ejecutar una llamada.
+
+La observación local espera hasta 120 segundos. Un tiempo agotado o cerrar el flujo **no confirma que el trabajo remoto haya sido cancelado**. Cancelar exige un evento separado `agent.session.input.cancel`; cancelación, eliminación de sesiones, recuperación y continuidad entre mensajes quedan fuera de esta base. `get_final_result()` distingue un turno completado de fallos, cancelaciones o una sesión simplemente inactiva. Consulte la [gestión de turnos y sesiones](https://developers.openai.com/api/docs/guides/agents-api/sessions).
+
+El diagnóstico informa `OpenAI Agents API`, las tres definiciones alojadas y la presencia de variables, nunca sus valores. Las capacidades siguen como `unconfigured`, Teams como `not-wired` y el acceso de cuenta/configuración activa como no verificados. También comprueba la función de citas Blob. La importación y el diagnóstico no realizan solicitudes de red.
+
+## Estado y retención de datos
+
+Agents API conserva el estado de las sesiones. Actualmente solo admite residencia de datos en Estados Unidos y no admite Zero Data Retention (ZDR), incluso con un entorno autohospedado. Desactivar trazas del SDK local no ofrece una protección equivalente ni cambia esa retención. La política de eliminación de sesiones y datos requiere una integración posterior autorizada. Estas limitaciones están documentadas en la [descripción oficial de Agents API](https://developers.openai.com/api/docs/guides/agents-api/overview). Esta preparación no ha creado ninguna sesión real.
 
 ## Inventario de Azure proporcionado
 
@@ -61,4 +71,4 @@ La referencia de solo lectura es el árbol de trabajo con cambios locales de `C:
 
 El siguiente paso es revisar y migrar un proveedor con pruebas determinísticas de su contrato; después, migrar el adaptador autenticado de Teams como una unidad separada. No copie `handler.py`, el orquestador de Terra ni paquetes incluidos de terceros. Confirme el comportamiento con evidencia de origen aprobada y criterios de aceptación en el entorno de pruebas antes de desplegar.
 
-La conexión de herramientas sigue la [documentación oficial de OpenAI](https://developers.openai.com/api/docs/guides/tools#usage-in-the-agents-sdk); el SDK fijado es `openai-agents==0.23.1`. Las pruebas locales comprueban fallos de herramientas, proveedores inyectados, validación de modelo y clave, protecciones de privacidad y construcción sin conexión. La autenticación activa, calidad de recuperación, entrega en Teams y comportamiento del modelo permanecen sin probar. Lea `agent.md` para conocer las instrucciones del proyecto.
+La conexión de funciones sigue la [documentación oficial de Agents API](https://developers.openai.com/api/docs/guides/agents-api/tools/functions). Las pruebas usan el cliente real de Python y `httpx2.MockTransport` con eventos SSE en memoria para comprobar la ruta beta, encabezados, solicitud y transporte automático de resultados. También verifican callbacks, límites, errores, modelo opcional y diagnóstico sin conexión. La autenticación activa, calidad de recuperación, entrega en Teams y comportamiento real del servicio permanecen sin probar. Lea `agent.md` para conocer las instrucciones del proyecto.

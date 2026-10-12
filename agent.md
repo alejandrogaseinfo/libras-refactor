@@ -1,10 +1,12 @@
 # Libras agent project context
 
-Prepare a local Python 3.11 migration from Terra orchestration to OpenAI Agents SDK while retaining Teams and bounded documentary, database-catalog, and ClickUp evidence providers.
+Prepare only a minimal Python 3.11 agentic-system base using hosted OpenAI Agents API while retaining future Teams and bounded documentary, database-catalog, and ClickUp evidence boundaries. This is not a full Libras migration.
 
 ## Current boundary
 
-- The bootstrap provides offline schema construction, injected async read providers, explicit model/key validation, disabled tracing/logging, and a six-turn run bound.
+- OpenAI owns orchestration and session state. The local gateway supplies an explicit existing agent ID/key, optional model override, environment type none, and the complete three-function allowlist. Do not introduce Agents SDK Agent/Runner or a local Responses reasoning loop.
+- The bootstrap provides offline request manifests and injected async read callbacks, bounded to six dispatches, 30 seconds each, 2000 query characters, and 256000 UTF-8 evidence bytes. Local observation is bounded to 120 seconds; stream closure does not confirm remote cancellation.
+- Hosted sessions retain state and currently support US residency only, without ZDR. Local SDK tracing flags do not change Agents API retention. Session cancellation, deletion, recovery, and continuation require later lifecycle integration.
 - Teams ingress, authentication, Azure clients, and ClickUp adapters are not wired. Environment-variable presence does not establish live readiness.
 - `C:\cw\Libras` is a read-only dirty reference. Do not modify it, import its application globals or bundled dependencies, or add it to `PYTHONPATH`.
 - Preserve server-side authorization, evidence provenance, citation filtering, bounded results, immutable artifact bindings, and read-only adapter operations. Never expose arbitrary SQL or generic credential/network tools.
