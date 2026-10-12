@@ -6,7 +6,7 @@ Prepare only a minimal isolated Python 3.11 agentic-system base using hosted Ope
 ## Problem and scope
 The reference checkout is C:\cw\Libras, inside the C:\cw monorepo at 2591bdc5e272b26453c6ac30b0c987530c0d5e69. Its dirty working tree and bundled dependencies must remain untouched. The parent workspace contains extracted dependencies, so the new project lives in libras-agents/ with its own Git repository and virtual environment.
 
-Authorized: only the minimal agentic-system base, local files, dependency installation, deterministic tests, offline API manifests/mocked requests, and feature-branch work-unit commits. The user requested push to https://github.com/alejandrogaseinfo/libras-refactor; parent handles push after explicit credential/session authorization. No remote repository probing, PR, merge, full migration, Azure configuration, deployment, Teams messages, ClickUp requests, real model/session requests, or credential reuse is authorized for this worker.
+Authorized: only the minimal agentic-system base, local files, dependency installation, deterministic tests, offline API manifests/mocked requests, and feature-branch work-unit commits. The user explicitly authorized documenting the Azure map in agent.md/README.md, committing it and pushing to https://github.com/alejandrogaseinfo/libras-refactor with the current GitHub CLI session. Parent handles GitHub authentication/readback/push; the bounded documentation worker has no remote authority. No PR, merge, full migration, Azure configuration, deployment, Teams messages, ClickUp requests or real model/session requests are authorized.
 
 ## Design
 - Use hosted OpenAI Agents API behind an explicitly configured agent ID and injected documentary, database-catalog and ClickUp read callbacks. OpenAI owns orchestration; Libras executes only approved bounded callbacks.
@@ -17,7 +17,7 @@ Authorized: only the minimal agentic-system base, local files, dependency instal
 - Keep README in neutral professional Spanish; provide English project context in agent.md and the canonical AGENTS.md pointer.
 
 ## Delivery and routing
-Delivery strategy: single-pr, describing one coherent minimal local preparation unit; no PR, merge or deployment is requested. Parent handles local commits and requested push after explicit credential/session authorization. Initial scaffold forecast was approximately 550 authored additions, excluding generated lock/environment artifacts; useful tests/docs were retained. Future migration units can be sliced separately. Initial reviewed boundary: planning commit b18f37d860881fca3551cf7cf6734ff2fc175454.
+Delivery strategy: single-pr, describing one coherent minimal local preparation unit; no PR, merge or deployment is requested. Parent handles local commits and push to libras-refactor with the explicitly authorized current GitHub CLI session. Initial scaffold forecast was approximately 550 authored additions, excluding generated lock/environment artifacts; useful tests/docs were retained. Future migration units can be sliced separately. Initial reviewed boundary: planning commit b18f37d860881fca3551cf7cf6734ff2fc175454.
 
 Correction delivery remains one coherent minimal base; local commits and the requested push destination belong to the parent. No PR, merge or deployment is requested. The correction replaces the superseded runtime and tests rather than introducing Teams or source integrations; its authored-change forecast is approximately 650 additions plus deletions, excluding generated lock/environment artifacts.
 
@@ -25,14 +25,19 @@ Route: delegated direct. Trigger evidence: unfamiliar legacy mapping and multipl
 
 ## Tasks
 - [x] T1 — Prepare an isolated environment with Agents API session requests and bounded callback wiring, reuse the citation utility, document Azure/legacy mappings, maintain agent instructions and a Spanish README, and verify offline behavior. The corrected API implementation and checks passed; the previous SDK runtime/tests were superseded.
-- [ ] T2 — Push the verified minimal base to https://github.com/alejandrogaseinfo/libras-refactor using an explicitly authorized GitHub credential/session. Route: inline Git delivery; no source implementation. Destination and operation were requested; credential/session authorization is pending. No PR, merge or deployment is requested.
+- [ ] T2 — Push the verified minimal base to https://github.com/alejandrogaseinfo/libras-refactor using the explicitly authorized current GitHub CLI session. Route: inline Git delivery; no source implementation. Destination, operation and credential/session are authorized. No PR, merge or deployment is requested.
+- [x] T3 — Document the 2026-10-12 Azure resource/identity/permission audit and provenance limits in README.md (neutral Spanish) and agent.md (English). Route: delegated direct because two documentation files need factual reconciliation. Writer and parent structural/factual readback and git diff --check passed; runtime tests are N/A because behavior is unchanged. Minimal Agents API scope and existing runtime bytes are preserved.
 
 Acceptance: a clean environment resolves pinned dependencies without openai-agents; the doctor command validates three hosted function definitions without credentials or remote activity; existing-agent ID/key and unavailable callback validation fail clearly; Blob citation classification is checked; mocked Agents API requests use the installed SDK's exact beta/session API; all corrected-project tests pass; original source remains untouched; README is neutral professional Spanish and AGENTS.md directs future agents to agent.md.
+
+T3 acceptance: both documents contain all ten dated resources, exact identity/role routing and scope suffixes, separate ARM assignment observations from effective access, and disclose incomplete provenance without expanding the minimal Agents API runtime or changing Azure permissions.
 
 ## Verification
 Applicable test-first runner: .venv\Scripts\python.exe -m unittest discover -s tests -v. Observe meaningful RED before runtime/evidence implementation, then GREEN. Documentation and packaging get structural checks, not invented RED evidence.
 
 Required checks: unittest discovery, pip check, python -m libras_agents doctor, compileall for src/tests, git diff --check. Do not create agents/sessions or send events against a real service. Writer self-verification and one parent offline doctor spot check are required; independent verification follows native assessed risk.
+
+T3 documentation-only exception: runtime/TDD/tests/builds/install checks are N/A because executable behavior and dependencies are unchanged. Use structural/factual readback, git diff --check and git diff --name-only for this unit.
 
 ## Progress and evidence
 - Initial SDK evidence below is historical and superseded by the user's Agents API correction; it does not establish corrected API acceptance or live readiness.
@@ -69,7 +74,22 @@ Required checks: unittest discovery, pip check, python -m libras_agents doctor, 
 - No reference source change, real API/session/agent creation, credential reuse, remote probing, Teams activity, deployment, commit or push was performed by this worker. All provider/account/live behavior remains unconfigured and untested; no final required check is failed or skipped.
 - Parent corrected-candidate structural readback and Agents API doctor spot check passed. The README startup command now uses the portable Python 3.11 launcher instead of a workstation-specific user path. Local GitHub CLI availability was checked without inspecting authentication or probing the remote repository.
 - Corrected work-unit commit: 65ee5e06fb72d8c5048a758be32d771752e2c5cf (refactor: use hosted Agents API for the minimal base). Observed 405 additions plus 264 deletions; 652 authored changes excluding 17 generated lock changes. Committed-slice assessment is medium, review_due=true (slice_budget_reached); no review has been granted or claimed approved.
-- Local origin configured as https://github.com/alejandrogaseinfo/libras-refactor.git; branch feat/openai-agents-bootstrap. No network operation occurred. T2 awaits explicit authorization to inspect/use the GitHub CLI session for that destination and push.
+- Historical pre-T3 state: local origin was configured as https://github.com/alejandrogaseinfo/libras-refactor.git on feat/openai-agents-bootstrap without a network operation. T2 awaited credential/session authorization then; the current user request explicitly authorizes the existing GitHub CLI session for the destination and push.
+
+## T3 Azure documentation evidence
+- Authorized scope is README.md, agent.md and this task document only. Route remains delegated direct for factual reconciliation across two documents. README uses neutral Spanish; agent.md and task evidence use English. The dated ARM map is a reuse baseline, not a deployment or permission-change instruction.
+- Replaced the obsolete unverified inventory with the 2026-10-12 ten-resource audit, exact production SystemAssigned role scopes, distinct Bot/Export/Staging identities, separate ingestion principal, Azure Tables persistence and immutable catalog/SQL artifact boundaries.
+- Documented scoped-assignment absence without claiming global denial, catalog IP metadata parity without claiming same-region reachability, and five retained ARM deployments without claiming complete Bicep/operator/workflow provenance. Public Microsoft documentation confirms Storage IP limitations and role-list semantics; no Azure/account or remote repository access was performed by the writer.
+- Preserved the minimal hosted Agents API scope and all runtime/dependency bytes. Graph site grants, secrets, feedback/export activity, data-plane access and later Teams/provider/session-lifecycle integration remain unverified or separately scoped. Structural/factual readback passed: both documents contain all ten resources, five principal IDs, four exact production role scopes, correct identity routing, bounded assignment observations and incomplete provenance. README is neutral Spanish and agent.md is English; completion/commit identity belong to the parent.
+- After documentation normalization, git diff --check ran once and exited 0; git diff --name-only exited 0 and listed only README.md, agent.md and odd/tasks/openai-agents-bootstrap.md. Git emitted the repository's LF-to-CRLF notices without whitespace errors. Runtime/TDD/tests/builds/install checks are N/A because only passive documentation changed; no such commands were repeated.
+- T2 destination, push operation and current GitHub CLI session are explicitly authorized. Parent owns authenticated GitHub readback, commit and push; the writer does not inspect or use that session.
 
 ## Next step
-Parent performs structural readback and doctor spot check, records the corrected local work unit and new native review outcome, then resolves credential/session authorization before the requested push. Provider, Teams and session-lifecycle implementations require separate later scope.
+Finish the authorized GitHub CLI push and record its remote commit readback. Provider, Teams, permission changes and session-lifecycle implementation remain separate later scope.
+
+## Azure map documentation delivery
+- User authorized the Azure map in README.md/agent.md and commit/push to alejandrogaseinfo/libras-refactor with the current GitHub CLI session. The active account is alejandrogaseinfo; repository readback found an empty destination with ADMIN permission. No credential value is stored.
+- T3 writer and parent structural/factual checks passed; staged git diff --check passed. Only README.md, agent.md and this recovery document changed. Runtime tests/builds are N/A for this documentation-only unit; previous 16-test Agents API proof remains unchanged.
+- Native assessment: medium because agent.md contains operational agent instructions, under_budget for this current documentation change. Current read-only mode status reports off, decided by global; native review is disabled/unmanaged and was not started. Earlier ungranted consent is historical, not an approval or delivery gate.
+- Existing Azure hosting, identities, roles and network metadata were documented without mutations or integration changes. Production SystemAssigned data grants remain distinct from Bot UAMI authentication and staging permissions.
+- Commit identity and remote push proof follow after the observed Git operations. Engram mirror remains pending because host session resolution is unconfirmed.

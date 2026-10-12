@@ -37,24 +37,72 @@ El diagnóstico informa `OpenAI Agents API`, las tres definiciones alojadas y la
 
 Agents API conserva el estado de las sesiones. Actualmente solo admite residencia de datos en Estados Unidos y no admite Zero Data Retention (ZDR), incluso con un entorno autohospedado. Desactivar trazas del SDK local no ofrece una protección equivalente ni cambia esa retención. La política de eliminación de sesiones y datos requiere una integración posterior autorizada. Estas limitaciones están documentadas en la [descripción oficial de Agents API](https://developers.openai.com/api/docs/guides/agents-api/overview). Esta preparación no ha creado ninguna sesión real.
 
-## Inventario de Azure proporcionado
+## Mapa de Azure verificado (2026-10-12)
 
-Los nombres siguientes pertenecen al inventario proporcionado de `rg-libras-prod`. No se han verificado su existencia, configuración activa, permisos ni destinos.
+La auditoría de solo lectura mediante Azure CLI verificó los diez recursos siguientes en `rg-libras-prod`, suscripción **ASEINFO Azure** (`75eecb3a-3825-4a53-bd91-09386a38e8a4`), tenant `abcee5bb-aa0e-4ecb-9377-71f4d0f42c2a`. Nueve están en Central US; Azure Bot es global. Son hechos del plano de administración ARM: no se probaron acceso a datos, secretos ni integraciones activas. Esta base mínima conserva esos límites y no configura Teams ni proveedores reales.
 
-| Nombre | Función proporcionada |
+| Recurso existente | Estado y función observados |
 | --- | --- |
-| `app-libras-prod` | App Service de producción |
-| `app-libras-staging` | App Service de pruebas |
-| `ASP-rglibrasprod-aee7` | Plan de App Service |
-| `bot-libras-prod` | Registro del bot |
-| `id-libras-bot-prod` | Identidad administrada del bot |
-| `id-libras-feedback-export-prod` | Identidad administrada para exportar comentarios |
-| `kv-libras-prod` | Key Vault |
-| `srch-libras-prod` | Azure AI Search |
-| `stlibrasconvprod` | Cuenta de almacenamiento de conversaciones |
-| `stlibrasdbcatalogprod01` | Blob Storage del catálogo de bases de datos |
+| `app-libras-prod` | App Linux, Running y HTTPS; tiene identidad `SystemAssigned` y la identidad de bot `UserAssigned` |
+| `app-libras-staging` | App Linux independiente, Running y HTTPS, con su propia `SystemAssigned`; no es un slot de producción |
+| `ASP-rglibrasprod-aee7` | Plan Linux B1 Basic, un worker y dos sitios; ambas apps comparten cómputo |
+| `bot-libras-prod` | Azure Bot F0, `UserAssignedMSI`, con `MsTeamsChannel` habilitado y dirigido a producción |
+| `id-libras-bot-prod` | Identidad de autenticación del bot, adjunta a producción; no se asume como lectora de datos |
+| `id-libras-feedback-export-prod` | Identidad existente, no adjunta a las dos apps inspeccionadas; su nombre sugiere exportación, pero no demuestra actividad ni programación |
+| `kv-libras-prod` | Standard, RBAC habilitado, `accessPolicies` vacío, red Allow, acceso público habilitado y eliminación temporal de 90 días |
+| `srch-libras-prod` | Free, una réplica y partición, autenticación Entra o clave; claves locales habilitadas y sin identidad de servicio |
+| `stlibrasconvprod` | StorageV2 Standard LRS, HTTPS/TLS 1.2, Blob público deshabilitado y red Allow; el contrato de conversaciones usa Azure Tables |
+| `stlibrasdbcatalogprod01` | StorageV2 Standard LRS, HTTPS/TLS 1.2, Blob público deshabilitado, clave compartida y endpoint habilitados; destino del catálogo y artefactos publicados según el repositorio |
 
-Utilice primero el entorno de pruebas para una migración posterior autorizada. Esta preparación no incluye scripts de despliegue ni realiza cambios en producción o envía mensajes de Teams.
+### Identidades y permisos existentes
+
+| Identidad | Principal/object ID | Client ID, cuando corresponde |
+| --- | --- | --- |
+| `SystemAssigned` de producción | `2fc398ef-6e81-41c3-b955-62b05d31ac7b` | No devuelto en los metadatos de la app |
+| `SystemAssigned` de staging | `cfd4eb89-5e9e-429a-b9db-1f9b98a92b63` | No devuelto en los metadatos de la app |
+| `id-libras-bot-prod` | `30fda04b-df31-4747-b70b-5214775194e7` | `bac24639-da91-45a3-ae85-062b07188b9c` |
+| `id-libras-feedback-export-prod` | `17eaac8c-4ed4-4700-b5a2-507b97d8391f` | `a8558af3-cfd4-4fc0-a864-85786ac854c1` |
+
+Las cuatro asignaciones directas siguientes pertenecen al principal `SystemAssigned` de producción y no tienen condición. Son permisos ya existentes, no instrucciones para crear, reasignar o ampliar roles. Cada alcance relativo se agrega al prefijo `/subscriptions/75eecb3a-3825-4a53-bd91-09386a38e8a4/resourceGroups/rg-libras-prod`.
+
+| Rol de producción | Alcance relativo exacto |
+| --- | --- |
+| `Search Index Data Reader` | `/providers/Microsoft.Search/searchServices/srch-libras-prod` — servicio completo |
+| `Key Vault Secrets User` | `/providers/Microsoft.KeyVault/vaults/kv-libras-prod` |
+| `Storage Table Data Contributor` | `/providers/Microsoft.Storage/storageAccounts/stlibrasconvprod` — cuenta completa |
+| `Storage Blob Data Reader` | `/providers/Microsoft.Storage/storageAccounts/stlibrasdbcatalogprod01/blobServices/default/containers/evolution-db-catalog` — solo ese contenedor |
+
+Ambas apps tienen `keyVaultReferenceIdentity=SystemAssigned`: la UAMI del bot no resuelve sus referencias de Key Vault. `msaAppId` del bot coincide con el client ID y el vínculo MSI de `id-libras-bot-prod`. Teams apunta a `https://app-libras-prod-h0azhpfef6d4fyax.centralus-01.azurewebsites.net/api/messages`; staging no recibe ese tráfico ni hereda automáticamente los permisos de producción.
+
+El inventario ARM del grupo devolvió 15 asignaciones y `nextLink=null`. No se encontraron asignaciones coincidentes para staging, la UAMI del bot ni la de exportación en los alcances del grupo/heredados inspeccionados. Esto no demuestra ausencia global de privilegios ni denegación efectiva. Véase la [referencia de consulta de asignaciones](https://learn.microsoft.com/en-us/cli/azure/role/assignment#az-role-assignment-list).
+
+El principal de ingestión de SharePoint `f0ec8ab2-9bf6-4d82-80e0-4ddbbc2fe26e`, cuyo nombre documentado es `libras-sharepoint-ingestion-prod`, es distinto del bot, la app y la sesión CLI, y no es uno de los diez recursos ARM. Tiene `Search Index Data Contributor` sobre todo `srch-libras-prod`, sin condición ni versión de condición. La referencia documenta Graph `Sites.Selected` y lectura concedida por sitio; esos permisos de Graph no se revalidaron en esta auditoría ARM.
+
+### Datos, red y límites de acceso efectivo
+
+El contrato de origen persiste conversaciones en Azure Tables: documenta `librasconversationmap` y configura `librasfeedback`. El rol de producción permite leer, escribir y eliminar entidades a nivel de cuenta; no se ha establecido actividad actual de feedback o exportación. No se le debe tratar como almacenamiento de conversaciones exclusivamente Blob. No se consultaron nombres, valores ni uso actual de secretos; las credenciales OpenAI, SharePoint y ClickUp aparecen como contratos en la documentación del repositorio.
+
+El catálogo contiene esquema, catálogo y artefactos SQL publicados e inmutables; no es una conexión SQL activa. Deben conservarse los vínculos de release, commit, publicación, esquema y citas. Su red tiene default Deny, excepción `AzureServices`, 36 reglas IP/CIDR, cero reglas VNet o de acceso a recursos y ningún endpoint privado; producción no tiene integración VNet. Las reglas coinciden con 5/5 direcciones de salida actuales y 22/22 posibles, sin direcciones fuera del conjunto. Esto solo demuestra coincidencia de metadatos: Azure Storage en la misma región utiliza direcciones privadas y esas reglas públicas no prueban conectividad efectiva. No hubo pruebas del plano de datos. Consulte las [restricciones de reglas IP de Storage](https://learn.microsoft.com/en-us/azure/storage/common/storage-network-security-limitations#restrictions-for-ip-network-rules).
+
+El broker de ClickUp es código que usa OAuth, el destino fijo `mcp.clickup.com/mcp` y un registro de alcances controlado por el servidor; no demuestra que exista otro servicio ARM de broker. Los roles de Azure no conceden acceso a cuentas externas de ClickUp/OpenAI ni a sitios de SharePoint. Preserve hosting, identidades y configuración existentes; cualquier cambio de permisos, red o integración requiere un alcance posterior explícito. Staging es una app separada con cómputo compartido: antes de usarla deben verificarse sus permisos y configuración propios.
+
+### Procedencia conservada y referencias
+
+Se conservaron cinco despliegues ARM `Incremental` y `Succeeded`; acreditan los destinos indicados, no el operador, flujo original ni plantilla exacta.
+
+| Fecha de 2026 | Despliegue conservado | Destino |
+| --- | --- | --- |
+| 23 de julio | `searchservice-1784839792935` | Search; coincide con `systemData` |
+| 25 de julio | `Microsoft.Web-WebApp-Portal-ffca8dac-8e43` | App de producción y plan compartido |
+| 28 de julio | `kv-libras-prod` | Key Vault; coincide con `systemData`, `createdByType=User` |
+| 30 de julio | `Microsoft.AzureBot-20260730084456` | Azure Bot |
+| 26 de agosto | `stlibrasdbcatalogprod01_1787770750955` | Cuenta del catálogo y servicios Blob/File predeterminados |
+
+La cuenta de conversaciones registra creación `2026-08-08T13:32:38.5783082Z`, pero no se estableció su flujo original de aprovisionamiento. La procedencia y fecha de staging y las dos UAMI siguen incompletas. Los nombres de despliegue sugieren uso del portal, sin probar quién operó ni cómo se provisionó todo.
+
+En la referencia de solo lectura, `infra/azure.bicep` y `botRegistration/azurebot.bicep` —este último asociado a ARM de Toolkit en `m365agents.yml`— declaran plan, app, UAMI, bot y Teams; Search tiene una plantilla separada `azure-search.bicep`. No incluyen Key Vault, las cuentas de almacenamiento, staging, la identidad de exportación ni asignaciones de roles. No debe inferirse que el Bicep versionado creó todos los recursos. Los contratos históricos o previstos también se apoyan en `docs/ai/context/consulta-clickup-live.md`, `docs/ai/validation/2026-10-08-ingestion-readonly.md`, `src/conversation_mapping_store.py` y `src/config.py`; no sustituyen los hechos ARM verificados ni prueban operación activa.
+
+Esta actualización es documental: conserva únicamente la base mínima con Agents API y no despliega, recrea recursos, altera permisos ni envía mensajes de Teams.
 
 ## Referencias del código y siguiente migración
 
