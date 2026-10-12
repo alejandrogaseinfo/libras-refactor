@@ -47,6 +47,7 @@ Required checks: unittest discovery, pip check, python -m libras_agents doctor, 
 - Untested by design: live Teams authentication/delivery, Azure and ClickUp provider behavior, retrieval quality, model behavior, and deployment. Source C:\cw\Libras was read only; no source file was changed by this worker.
 - Parent structural readback and offline doctor spot check passed. Staged git diff --check passed. Initial untracked-candidate assessment was unassessable; explicit staging resolved that inventory condition, after which native assessment reported medium (606 changed lines including generated lock).
 - Planning baseline: b18f37d860881fca3551cf7cf6734ff2fc175454. Rollback boundary: this isolated project's bootstrap files and environment; the legacy repository and Azure resources are unaffected.
+- Work-unit commit: 950edeb8d59a0658c37cbb3e381e8aa661408e11 (feat: prepare isolated Libras Agents environment). Observed 606 additions plus 6 deletions; authored count 547 after excluding the 65-line generated lock. Source, tests, Spanish README and agent instructions are together in this unit. No push, PR, merge or deployment performed.
 
 ## Next step
 Record the local work-unit commit and native review outcome, then migrate bounded providers and the authenticated Teams adapter in separate authorized work units.
