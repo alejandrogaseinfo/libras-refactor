@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=77,<83"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "libras-agents"
+version = "0.1.0"
+description = "Isolated local preparation for Libras OpenAI Agents migration"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "openai-agents==0.23.1",
+    "openai>=3,<4",
+    "microsoft-agents-hosting-aiohttp==1.8.0",
+    "microsoft-agents-authentication-msal==1.8.0",
+    "azure-search-documents>=12,<13",
+    "azure-identity>=1.26,<2",
+    "azure-keyvault-secrets>=4.11,<5",
+    "azure-storage-blob>=12.31,<13",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
